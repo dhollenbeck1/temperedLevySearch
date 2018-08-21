@@ -23,6 +23,8 @@ lambda = 1;
 %% generating tempered Levy distribution
 x = linspace(xmin,xmax,n);
 p = @(xx) exp(-lambda.*xx).*(xx+xoffset).^(-mu);
+px = @(xx) x.*exp(-lambda.*xx).*(xx+xoffset).^(-mu);
+pxx = @(xx) x.*exp(-lambda.*xx).*(xx+xoffset).^(-mu);
 psum = sum(p(x));
 cdf = cumsum(p(x))/psum;
 C = integral(p,xmin,xmax);
@@ -31,6 +33,7 @@ pdf = p(x)./C;
 %% main loop
 eta=0;         % eta? for efficiency?
 iter=100;       % total number of iterations.
+xx = [];
 for p=1:iter
     num=0;
     dis=0;
@@ -108,8 +111,8 @@ for p=1:iter
         % check if target found
         if f==1
             num=num+1;                      % update total targets found
-            plot(starx(i),stary(i),'*');    % update tar found plot 
-            hold on;
+%             plot(starx(i),stary(i),'*');    % update tar found plot 
+%             hold on;
             f = 0;                          % reset f
         end
         
@@ -122,7 +125,7 @@ for p=1:iter
     
     % add search efficiency for this iteration
     eta=eta+num/dis;
-    
+    xx = [xx,x];
 end
 
 % get average search efficiency
@@ -135,9 +138,32 @@ plot(t1,t2,'o');
 plot(xx(1:nn-1),yy(1:nn-1),'*');
 plot(starx(1:i),stary(1:i));
 % plot(tarx,tary,'*r');
-plot(starx(1),stary(1),'^k','MarkerFaceColor','r');
-plot(starx(i),stary(i),'^k','MarkerFaceColor','g');
+plot(starx(1),stary(1),'^k','MarkerFaceColor','g');
+plot(starx(i),stary(i),'^k','MarkerFaceColor','r');
 hold off;
 
+%%
+nbins = 100;
+nbinsx = 500;
+xxx = [xx];
+meanx = mean(xx);
+stdx = std(xx);
+pdfx = (xx-meanx)./stdx;
 
+
+yyaxis left
+hist(x,50);
+yyaxis right
+[countsx,binsx] = hist(xxx,nbinsx);
+countsx = countsx./((binsx(2)-binsx(1))*sum(countsx));
+plot(binsx,countsx.*C,'g'); hold on
+
+xn = randn(1,length(xxx));
+[counts,bins] = hist(xn,nbins);
+counts = counts./((bins(2)-bins(1))*sum(counts));
+plot(bins,counts,'g--'); hold off;
+
+legend('hist','tempered levy','Gaussian')
+xlim([-10,10])
+% ylim([0,1.4])
 
