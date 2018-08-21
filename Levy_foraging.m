@@ -9,6 +9,7 @@ M=50;
 w=10;
 rv=1;
 D=200;
+m=10000;
 
 %% setting for tempered Levy initialization
 mu=1;
@@ -42,15 +43,19 @@ for p=1:iter
     t1=tarx;
     t2=tary;
     
+    % searcher start point
     starx(1)=D*rand(1);
     stary(1)=D*rand(1);
-    m=10000;
-    
+       
     for i=1:m
+        
         rn(i) = find(cdf >= rand,1,'first');
+        
+        % check if correct jump made
         while isnan(rn(i))
             rn(i) = find(cdf <= rand,1,'last');
         end
+        
     end
     
     x=rn*(xmax-xmin)/n+xmin;
