@@ -135,8 +135,8 @@ plot(t1,t2,'o');
 plot(xx(1:nn-1),yy(1:nn-1),'*');
 plot(starx(1:i),stary(1:i));
 % plot(tarx,tary,'*r');
-plot(starx(1),stary(1),'^k','MarkerFaceColor','r');
-plot(starx(i),stary(i),'^k','MarkerFaceColor','g');
+plot(starx(1),stary(1),'^r');
+plot(starx(i),stary(i),'^g','MarkerFaceColor',);
 hold off;
 
 
